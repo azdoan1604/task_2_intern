@@ -1,0 +1,4 @@
+{
+    "css": ["/assets/css/grid.css","/assets/css/style.css"],
+    "js": ["/assets/js/app.js","assets/js/uploadfile.js"]
+}
