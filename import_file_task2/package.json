@@ -11,7 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "@longanphuc/orm-mysql": "^1.0.6",
+    "csv-parse": "^5.2.1",
     "express": "^4.18.1",
-    "express-fileupload": "^1.4.0"
+    "express-fileupload": "^1.4.0",
+    "xlsx": "^0.18.5"
   }
 }

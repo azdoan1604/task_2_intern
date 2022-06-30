@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const fs = require('fs');
+const xlstojson = require('./xlstojson')
 const fileUpload = require('express-fileupload');
 
 const asset = require("./assets.json")
@@ -30,7 +31,7 @@ const forceSSL = function () {
 app.use(express.static('./index.html'));
 
 app.get('/', function (req, res) {
-  let html = fs.readFileSync("./index.html", 'utf8')
+  let html = fs.readFileSync("./index.html", 'utf8').replace("{data}", "")
   res.send(html);
 });
 
@@ -46,20 +47,36 @@ app.post('/', async function (req, res) {
     let avatar = req.files.files;
     //Use the mv() method to place the file in upload directory (i.e. "uploads")
     console.log(avatar)
-    avatar.mv(__dirname +'/assets/data/' + avatar.name,function(err){
-      
+    await avatar.mv(__dirname + '/assets/data/' + avatar.name, function (err) {
     });
-    
+    let data = xlstojson(__dirname + '/assets/data/' + avatar.name)
+    let thead = "<td>MaDH</td>"
+    thead += "<td>SDT</td>"
+    thead += "<td>GiaiThuong</td>"
+    let tbody = ""
+    data.forEach(k => {
+      tbody +=
+        `
+        <tr>
+          <td>${k['MaDH']}</td>
+          <td>${k.SDT}</td>
+          <td>${k.GiaiThuong}</td>
+        </tr>
+      `
+    })
+    let table = `
+    <table>
+    <thead>
+      ${thead}
+    </thead>
+    <tbody>
+    ${tbody}
+    </tbody>
+    </table>
+    `
     //send response
-    res.send({
-      status: true,
-      message: 'File is uploaded',
-      data: {
-        name: avatar.name,
-        mimetype: avatar.mimetype,
-        size: avatar.size
-      }
-    });
+    let html = fs.readFileSync("./index.html", 'utf8').replace("{data}", table)
+    res.send(html);
   }
   // try {
   // } catch (err) {
