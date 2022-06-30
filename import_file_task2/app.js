@@ -36,33 +36,36 @@ app.get('/', function (req, res) {
 
 app.post('/', async function (req, res) {
   console.log("up loads")
-  try {
-    if (!req.files) {
-      res.send({
-        status: false,
-        message: 'No file uploaded'
-      });
-    } else {
-      //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-      let avatar = req.files.avatar;
-
-      //Use the mv() method to place the file in upload directory (i.e. "uploads")
-      avatar.mv('./asset/data/' + avatar.name);
-
-      //send response
-      res.send({
-        status: true,
-        message: 'File is uploaded',
-        data: {
-          name: avatar.name,
-          mimetype: avatar.mimetype,
-          size: avatar.size
-        }
-      });
-    }
-  } catch (err) {
-    res.status(500).send(err);
+  if (!req.files) {
+    res.send({
+      status: false,
+      message: 'No file uploaded'
+    });
+  } else {
+    //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+    let avatar = req.files.files;
+    //Use the mv() method to place the file in upload directory (i.e. "uploads")
+    console.log(avatar)
+    avatar.mv(__dirname +'/assets/data/' + avatar.name,function(err){
+      
+    });
+    
+    //send response
+    res.send({
+      status: true,
+      message: 'File is uploaded',
+      data: {
+        name: avatar.name,
+        mimetype: avatar.mimetype,
+        size: avatar.size
+      }
+    });
   }
+  // try {
+  // } catch (err) {
+  //   console.log("loi")
+  //   res.status(500).send(err);
+  // }
 })
 
 app.use(forceSSL());
